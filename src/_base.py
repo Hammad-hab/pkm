@@ -12,6 +12,7 @@ class MIPInit:
     __PATH = "/Users/Shared/mojo_pkm"
     __PATH_FILE = "/Users/Shared/mojo_pkm/sources.list"
     __FBAPP = firebase_admin.initialize_app(firebase_admin.credentials.Certificate("./certificate.json"))
+    
     @staticmethod
     @strict_one_call
     def getPackages() -> dict[str, str]:
