@@ -31,8 +31,8 @@ class Registry:
         return pacakge_name in self.key_value.keys()
         ...
     
-    def addPackage(self, name:str, repo:str):
-        self.key_value[name] = repo
+    def addPackage(self, name:str, repo_or_version:str):
+        self.key_value[name] = repo_or_version
     
     def getPackage(self, name:str):
         return self.key_value[name]
@@ -42,7 +42,7 @@ class Registry:
     
     def write_to(self, file:str):
         lst = []
-        for key, value in self.key_value:
+        for key, value in self.key_value.items():
             lst.append(f"{key}={value}")
         with open(file, "w+" if os.path.isfile(file) else "x+") as fwrite:
             fwrite.writelines(lst)
@@ -51,6 +51,9 @@ class Registry:
         self.write_to(Registry.PATH_FILE)
 
 def readPKMSourceFile(name:str) -> Registry:
+    if not os.path.isfile(name):
+        with open(name, "x+") as fread:
+            return Registry()
     with open(name, "r+") as fread:
         lines = fread.readlines()
         return Registry.create_from_list(lines)

@@ -1,8 +1,13 @@
-from typing import Any, Callable
+from math import inf
+from typing import Any, Callable, Iterable
 from termcolor import colored as color
-from rich.progress import Progress as progress
+from rich.console import Console
 from git import RemoteProgress
+from Levenshtein import distance
 import sys
+
+
+console = Console()
 class FNCallOnce:
     def __init__(self, function:Callable) -> None:
         self.fnbind = function
@@ -15,29 +20,45 @@ class FNCallOnce:
         else:
             raise Exception("Function (FNCallOnce Wrapper) has already been called")
 
+CONFIG = {
+    "en-logs": True,
+    "pack-package": True
+}
 
 def strict_one_call(wrapper:Callable):
     return FNCallOnce(wrapper)
 
 def abort(err:str, process:str):
     print(color(color="red",text=
-        f"Error while attempting to {process}\n\t:" \
+        f"Error while attempting to {process}\n\t" \
         f"{err}\n\tExiting with code -1" 
     ))
     exit(-1)
 
+def errmsg(err:str):
+    print(color(color="red",text=
+        f"ERROR: {err}"
+    ))
+
+
 
 def info(info:str):
+    if not CONFIG["en-logs"]:
+        return None
     print(color(color="light_blue",text=
         f"INFO: {info}" 
     ))
 
 def success(message:str):
+    if not CONFIG["en-logs"]:
+        return None
     print(color(color="light_green",text=
         f"SUCCESS: {message}" 
     ))
 
 def warn(message:str):
+    if not CONFIG["en-logs"]:
+        return None
     print(color(color="yellow",text=
         f"WARNING: {message}" 
     ))
@@ -55,3 +76,26 @@ class Progress(RemoteProgress):
             sys.stdout.flush()
         sys.stdout.write(" %s" % message)
         sys.stdout.flush()
+    
+        
+def generate_compile_command(compile="_main.py", includes=[]):
+    command = f"pyinstaller --onefile "
+    with open("requirements.txt", 'r') as f:
+        for line in f.readlines():
+            package = line.split("==")[0]
+            if package not in includes:
+                command += f" --exclude-module={package}"
+            else:
+                command += f" --hidden-import={package}"
+    return command + " " + compile
+    ...
+
+def findNearest(target:str, from_:Iterable[str]):
+    smallest = inf
+    smallest_l_string = None
+    for string in from_:
+        dist = distance(target, string)
+        if distance(target, string) < smallest:
+            smallest = dist
+            smallest_l_string = string
+    return smallest_l_string

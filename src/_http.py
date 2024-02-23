@@ -1,41 +1,51 @@
 import shutil
 import git
 import os
-from _utils import info, warn, success, Progress
+from _utils import info, warn, success, Progress,errmsg
 
+
+if 'SUDO_USER' in os.environ:
+    username = os.environ['SUDO_USER']
+else:
+    username = os.getenv('USER') or os.getenv('USERNAME')
 class PKMGitClone:
     __TMP_FOLDER_NAME = "tmp" # name of the temporary folder
-    __MND_DIR = "mojo_modules/" # name of the mojo_modules folder
-    
+    _MND_DIR = f"/Users/{username}/.modular/pkg/packages.modular.com_mojo/lib/mojo/" # name of the mojo_modules folder
+    PACK = False
     
     def __init__(self, url:str, pkgname:str) -> None:
         self.git_repo_url = url
         self.pkgname = pkgname
+        self.pkg_bin = PKMGitClone.PACK
         info("Created PKMGitClone instance")
-
     def clone(self):
         info("Executing Pre-clone operations")
-        if not os.getcwd().endswith(PKMGitClone.__MND_DIR):
+        if not os.getcwd() == (PKMGitClone._MND_DIR):
             warn("User is not in mojo_modules, changing directory")
-            os.chdir(os.getcwd() + "/" + PKMGitClone.__MND_DIR)
-        tmp_relative = os.getcwd() + "/" +PKMGitClone.__TMP_FOLDER_NAME
+        tmp_relative = PKMGitClone._MND_DIR + PKMGitClone.__TMP_FOLDER_NAME
         try:
-            info(f"Cloning repositiory {self.git_repo_url} of package {self.pkgname}")
+            info(f"Cloning repositiory {self.git_repo_url} of package {self.pkgname} into {tmp_relative}")
             repositiory = git.Repo.clone_from(self.git_repo_url, tmp_relative, progress=Progress()) # type: ignore
             print()
             success(f"Successfully cloned repository {self.git_repo_url}")
-            os.chdir(tmp_relative)
             info("Deleting tmp/ files and setting up project")
-            shutil.move(tmp_relative + "/" + self.pkgname, "../")
-            shutil.rmtree(tmp_relative)
+            shutil.move(tmp_relative + "/" + self.pkgname, PKMGitClone._MND_DIR + self.pkgname)
+            shutil.rmtree(PKMGitClone._MND_DIR + PKMGitClone.__TMP_FOLDER_NAME)
+            if self.pkg_bin:
+                os.system(f"mojo package {PKMGitClone._MND_DIR + self.pkgname} -o {PKMGitClone._MND_DIR + self.pkgname}.mojopkg")
+                shutil.rmtree(PKMGitClone._MND_DIR + self.pkgname)
             success(f"Successfully deleted tmp files")
             
             return repositiory
         except:
             info("Performing Cleanup due to error")
-            shutil.rmtree(tmp_relative)
+            if os.path.isdir(PKMGitClone._MND_DIR + PKMGitClone.__TMP_FOLDER_NAME):
+                shutil.rmtree(PKMGitClone._MND_DIR + PKMGitClone.__TMP_FOLDER_NAME)
+            errmsg(f"Failure while cloning repo into {tmp_relative}")
+            if os.path.isdir(PKMGitClone._MND_DIR+self.pkgname):
+                errmsg(f"PKM could not install package {self.pkgname} because it is already installed")
             raise
-            
+                        
     def refresh(self, url:str, pkgname:str):
         self.git_repo_url = url
         self.pkgname = pkgname

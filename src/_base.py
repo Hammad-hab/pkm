@@ -32,6 +32,7 @@ class MIPInit:
             os.chdir(MIPInit.__PATH)
             with open(MIPInit.__PATH_FILE, "+x") as fwrite:
                 fwrite.writelines(self.packages)
+            
             os.chdir(initial_dir)
         else:
             with open(MIPInit.__PATH_FILE, "r") as fread:
