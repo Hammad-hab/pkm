@@ -1,8 +1,11 @@
-from _registry import PackagesRepo, Registry,readPKMSourceFile
+from _registry import PackagesRepo, Registry, readPKMSourceFile
 from _utils import abort, info, success, CONFIG
 from _http import PKMGitClone
 import os
 
+"""
+    FIXME: Security issues that might allow unauthorised access to repository
+"""
 
 class PKMManager:
     
@@ -30,6 +33,6 @@ class PKMManager:
             self.installed_reg.write_to(Registry.INSTALLED_FILE)
         except Exception as e:
             info(f"Failed to install {package}")
-            # abort(f"{e!r}", "Installing Package")
+            abort(f"{e!r}", "Installing Package")
             raise
         success(f"Successfully installed {package}")

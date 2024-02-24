@@ -1,10 +1,12 @@
+import firebase_admin, sys
+from google.cloud.firestore import Client, CollectionReference
+from firebase_admin import firestore
 from math import inf
 from typing import Any, Callable, Iterable
 from termcolor import colored as color
 from rich.console import Console
 from git import RemoteProgress
 from Levenshtein import distance
-import sys
 
 
 console = Console()
@@ -99,3 +101,22 @@ def findNearest(target:str, from_:Iterable[str]):
             smallest = dist
             smallest_l_string = string
     return smallest_l_string
+
+CERTIFICATE = firebase_admin.initialize_app(firebase_admin.credentials.Certificate("./certificate.json"))
+CLIENT: Client = firestore.client()
+
+def getCollection(name:str) -> CollectionReference:
+    return CLIENT.collection(name)
+
+packages: CollectionReference = getCollection("packages")
+
+def getFirestoreDocument(name) -> dict:
+    dat = packages.document(name).get().to_dict()
+    return {} if not dat else dat
+
+def setFirestoreDocument(name, data) -> None:
+    dat = packages.document(name).set(data)
+
+def setFirestoreDocumentM(name, data) -> None:
+    dat = packages.document(name).set(data, merge=True)
+    

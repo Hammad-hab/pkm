@@ -1,9 +1,6 @@
 from math import e
 import os
-import firebase_admin
-from firebase_admin import credentials
-from google.cloud.firestore import Client
-from firebase_admin import firestore
+from _utils import success, getFirestoreDocument
 import os
 
 class Registry:
@@ -45,7 +42,7 @@ class Registry:
         for key, value in self.key_value.items():
             lst.append(f"{key}={value}")
         with open(file, "w+" if os.path.isfile(file) else "x+") as fwrite:
-            fwrite.writelines(lst)
+            fwrite.writelines(x + '\n' for x in lst)
     
     def writeDefault(self):
         self.write_to(Registry.PATH_FILE)
@@ -56,25 +53,31 @@ def readPKMSourceFile(name:str) -> Registry:
             return Registry()
     with open(name, "r+") as fread:
         lines = fread.readlines()
+        lines = [ln.replace("\n", '') for ln in lines]
         return Registry.create_from_list(lines)
     
     
-    
+"""
+    FIXME:
+        * Bugfix: force_reload mechanism is buggy and might caus problems
+"""
 class PackagesRepo:
-    def __init__(self) -> None:
-        if not os.path.isfile(Registry.PATH_FILE):
-            self.certificate = firebase_admin.initialize_app(firebase_admin.credentials.Certificate("./certificate.json"))
-            self.client: Client = firestore.client()
-            self.packages = self.client.collection("packages").document().get("packages_d").to_dict()
+    def __init__(self, force_reload=False) -> None:
+        if (not os.path.isfile(Registry.PATH_FILE)) or (force_reload):
+            self.packages =getFirestoreDocument("packages_d")
             if not self.packages:
                 self.packages = {}
             self.packages_l: list[str] = self.packages["lspackages"]
             with open(Registry.PATH_FILE, "w") as fwrite:
-                fwrite.writelines(self.packages_l)
+                fwrite.writelines([x + '\n' for x in self.packages_l])
             self.islocal = False
+            if force_reload:
+                success("Fetched new packages from Registry.")
         else:
             with open(Registry.PATH_FILE, "r") as fread:
                 self.packages_l = fread.readlines()
+                self.packages_l = [ln.replace("\n", '') for ln in self.packages_l]
+                
             self.islocal = True
         
     
