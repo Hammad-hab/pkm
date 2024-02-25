@@ -45,7 +45,12 @@ def purge(package_name: str, disable_logs:bool=False, ):
     else:
         abort("User tried to purge a package that hasn't been instaled", "Purging a package")
         
-
+@app.command()
+def upload():
+    """
+        Upload a package to pkm repository
+    """
+    abort("Command not supported yet...work in progress.")
 
 @app.command()
 def has(package_name: str):
@@ -65,6 +70,3 @@ def update():
         success("Successfully updated sources.list")
     except Exception as e:
         abort(f"Failed to update sources.list because of an internal error: {e!r}", "Updating sources.list")
-
-if __name__ == "__main__":
-    app()
