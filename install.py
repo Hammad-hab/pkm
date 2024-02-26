@@ -1,9 +1,21 @@
-from git import Repo
-import os
+from git import Repo, RemoteProgress
+import os, sys
 import shutil
 import uuid
 import subprocess
-from installer_utils import GenericProgress
+class GenericProgress(RemoteProgress):
+    def update(self, op_code: int, cur_count: str | float, max_count: str | float | None = None, message: str = "") -> None:
+        if max_count is not None:
+            completed = int(cur_count / max_count * 50)  # Using 50 characters for the progress bar #type:ignore
+            remaining = 50 - completed
+            progress_bar = "Installing pkm [%s%s]" % ('▓' * completed, '░' * remaining)
+            sys.stdout.write("\r%s" % progress_bar)
+            sys.stdout.flush()
+        else:
+            sys.stdout.write("\rInstalling pkm [%s]" % ('▓' * int(cur_count / 10))) #type:ignore
+            sys.stdout.flush()
+        sys.stdout.write(" %s" % message)
+        sys.stdout.flush()
 
 if 'SUDO_USER' in os.environ:
     username = os.environ['SUDO_USER']
@@ -31,11 +43,11 @@ with open(f"/usr/local/bin/pkmd/__main__.py", "w") as f:
 
 SHELL_PROP_SRC = \
 """
-# prop >> __main__.py
-echo Welcome to PKM
+#!/bin/zsh
 python3.10 /usr/local/bin/pkmd/__main__.py $@
 """
 
-with open(f"/usr/local/bin/pkm.sh", "w") as f:
+with open(f"/usr/local/bin/pkm", "w") as f:
     f.write(SHELL_PROP_SRC)
     f.close()
+subprocess.run(["chmod", "+x", "/usr/local/bin/pkm"])
