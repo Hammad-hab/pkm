@@ -7,7 +7,7 @@ from termcolor import colored as color
 from rich.console import Console
 from git import RemoteProgress
 from Levenshtein import distance
-
+import os
 
 console = Console()
 class FNCallOnce:
@@ -102,7 +102,10 @@ def findNearest(target:str, from_:Iterable[str]):
             smallest_l_string = string
     return smallest_l_string
 
-CERTIFICATE = firebase_admin.initialize_app(firebase_admin.credentials.Certificate("./certificate.json"))
+script_dir = os.path.dirname(os.path.abspath(__file__))
+certificate_path = os.path.join(script_dir, "certificate.json")
+
+CERTIFICATE = firebase_admin.initialize_app(firebase_admin.credentials.Certificate(certificate_path))
 CLIENT: Client = firestore.client()
 
 def getCollection(name:str) -> CollectionReference:
