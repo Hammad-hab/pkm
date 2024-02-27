@@ -73,4 +73,9 @@ to login again.
 Used to create a repository account
 
 **Syntax**:
-          `pkm create``
+          `pkm create`
+
+### Installation
+* Run the command `curl -L https://raw.githubusercontent.com/Hammad-hab/pkm/main/install.py >> install.py`
+* This will create a file named `install.py` in your directory
+* After the file has been installed, run `install.py`. The script will automatically install pkm into your system
