@@ -3,6 +3,7 @@ import typer, os, shutil
 from _utils import CONFIG, warn, console, abort, color, success
 from _app import PKMManager, readPKMSourceFile, Registry, PackagesRepo
 from _http import PKMGitClone
+from _usrbase import Userbase
 app = typer.Typer()
 
 
@@ -24,6 +25,10 @@ def install(package_name: str, disable_logs:bool=False, pack:bool=True):
     
 @app.command()
 def purge(package_name: str, disable_logs:bool=False, ):
+    """
+    Delete (purge) a package from your system. You can disable logs by setting disable_logs=True.
+    """
+    
     CONFIG["en-logs"] = not disable_logs
     if PKMManager.hasInstalledPackage(package_name):
         delpackage = typer.confirm(color(f"Are you sure you want to delete {package_name}?", color="yellow"))
@@ -46,11 +51,18 @@ def purge(package_name: str, disable_logs:bool=False, ):
         abort("User tried to purge a package that hasn't been instaled", "Purging a package")
         
 @app.command()
-def upload():
+def upload(record_creds:bool=True, ignore_stored:bool=False):
     """
-        Upload a package to pkm repository
+        Upload a package to pkm repository.\n
+        record_creds (True/False): specify if you want to prevent pkm from storing your credentials to prevent you from 
+        having to login every time you upload a package\n
+        ignore_stored (True/False): specify if you forcefully want pkm to ignore recorded credentials. This is useful if you want
+        to login again.
     """
-    abort("Command not supported yet...work in progress.")
+    base = Userbase(record=record_creds, ignore_record=ignore_stored)
+    base.login(terminal_mode=True)
+    base.uploadPackage(terminal_mode=True)
+    # abort("Command not supported yet...work in progress.")
 
 @app.command()
 def has(package_name: str):
@@ -70,3 +82,4 @@ def update():
         success("Successfully updated sources.list")
     except Exception as e:
         abort(f"Failed to update sources.list because of an internal error: {e!r}", "Updating sources.list")
+

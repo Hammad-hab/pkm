@@ -1,5 +1,5 @@
 import firebase_admin, sys
-from google.cloud.firestore import Client, CollectionReference
+from google.cloud.firestore import Client, CollectionReference, DocumentReference
 from firebase_admin import firestore
 from math import inf
 from typing import Any, Callable, Iterable
@@ -116,6 +116,10 @@ packages: CollectionReference = getCollection("packages")
 def getFirestoreDocument(name) -> dict:
     dat = packages.document(name).get().to_dict()
     return {} if not dat else dat
+
+def getFirestoreDocumentRaw(name) -> DocumentReference:
+    dat = packages.document(name)
+    return dat
 
 def setFirestoreDocument(name, data) -> None:
     dat = packages.document(name).set(data)
