@@ -34,6 +34,14 @@ class Userbase:
         self.ignore_record=ignore_record
         pass
     
+    def create_account(self, username:str="", password:str=""):
+        self.users_db_pointer.update({
+            f'{username}': {
+                'password': password,
+                'hasAccessTo': []
+            }
+        })
+    
     def login(self, terminal_mode=False, username:str="", password:str="") -> None:
         if self.ignore_record or not os.path.isfile(Registry.PATH + "/secrets.toml"):
             self.pusername = username if not terminal_mode else input("Username: ")

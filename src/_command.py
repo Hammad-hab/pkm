@@ -83,3 +83,11 @@ def update():
     except Exception as e:
         abort(f"Failed to update sources.list because of an internal error: {e!r}", "Updating sources.list")
 
+@app.command()
+def create():
+    "Create an account on pkm repository index"
+    base = Userbase()
+    username = input("Username: ")
+    password = input("Password: ")
+    base.create_account(username, password)
+   

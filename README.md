@@ -1,5 +1,4 @@
-
-# pkm,
+# `pkm`,
 
 ### Mojo's unofficial community package manager
 
@@ -9,9 +8,10 @@ Mojo is a new programming language and while it has many features in it's recent
 
 `pkm` has been designed to be simple and extremely user friendly so it's commands are mostly self-explanatory. Following are their uses and descriptions
 
->  #### `pkm install`
+> #### `pkm install`
 
 Used for installing a package.
+
 **Syntax**:
           `pkm install <package_name> [--disable-logs| --no-disable-logs | --pack | --no-log]`
 **Attributes**:
@@ -32,15 +32,45 @@ Used for purging (removing/uninstalling) a package.
 **Attributes**:
 
 * `--disable-logs`: Silence the `pkm` installer logs. This means that no success or info logs will be shown, only errors
-  * `--no-disable-logs`(**default**): This is the *default* value of the en-logs configuration i.e logs are **not** disabled       
+  * `--no-disable-logs`(**default**): This is the *default* value of the en-logs configuration i.e logs are **not** disabled
 
 > #### `pkm has`
 
 Used to check if a `pkm` package has been installed
+
 **Syntax**:
         `pkm has <package_name>`
 
 > #### `pkm config`
 
+Used to print the default configuration of `pkm` 
+(**deprecated**)
 
 > #### `pkm update`
+
+Updates the local package list
+
+**Syntax**:
+          `pkm update`
+
+**Detailed Explanation**
+`pkm` downloads packages from different places so in order to ensure minimal server interaction, `pkm` like `apt`/`apt-get` maintains a `sources.list` which contains all the packages and their locations. 
+If the original repository has a new package, `pkm` won't know until the `sources.list` is updated. 
+
+> #### `pkm upload`
+
+Upload a package to the `pkm` repository
+
+**Syntax**:
+         `pkm upload [--record_creds| --no-record-creds | --ignore-stored | --no-ignore-stored]`
+**Attributes**:
+* `--record-creds` (`True`/`False`): specify if you want to prevent pkm from storing your credentials to prevent you from  having to login every time you upload a package
+* `--ignore-stored` (`True`/`False`): specify if forcefully want pkm to ignore recorcredentials. This is useful if you want
+to login again.
+
+> #### `pkm create`
+
+Used to create a repository account
+
+**Syntax**:
+          `pkm create``
