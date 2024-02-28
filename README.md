@@ -3,7 +3,7 @@
   <h4>Mojo's unofficial community package manager</h4>
 </div>
 
-## About
+
 Mojo is a new programming language and while it has many features in its recent versions, it lacks a package manager. So until Mojo has its own package manager by Modular, `pkm` is there to temporarily fill that space.
 
 ## Quick Start
