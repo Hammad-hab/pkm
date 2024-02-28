@@ -4,7 +4,7 @@ from _utils import CONFIG, warn, console, abort, color, success
 from _app import PKMManager, readPKMSourceFile, Registry, PackagesRepo
 from _http import PKMGitClone
 from _usrbase import Userbase
-app = typer.Typer()
+app = typer.Typer(name="pkm", )
 
 
 @app.command()
