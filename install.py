@@ -30,9 +30,9 @@ installer_dir = f"/usr/local/bin/{tool_name}/installer"
 repository = Repo.clone_from(clone_repository, target_path, progress=GenericProgress())
 shutil.rmtree(installer_dir)
 os.remove(target_path + "/LICENSE")
-shutil.move(f"{target_path}/src", "/usr/local/bin/")
+shutil.move(f"{target_path}/pkm-core", "/usr/local/bin/")
 shutil.rmtree(target_path)
-os.rename(f"/usr/local/bin/src", f"/usr/local/bin/pkmd")
+os.rename(f"/usr/local/bin/pkm-core", f"/usr/local/bin/pkmd")
 with open(f"/usr/local/bin/pkmd/__main__.py", "r") as f:
     contents = f.read().replace("INSTALLER<INSERT_PYTHON_PATH>", "!" + subprocess.run(["which", "python3"], capture_output=True).stdout.decode("utf-8"))
     f.close()
