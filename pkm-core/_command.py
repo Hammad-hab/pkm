@@ -1,4 +1,3 @@
-from genericpath import isfile
 import typer, os, shutil
 from _utils import CONFIG, warn, console, abort, color, success
 from _app import PKMManager, readPKMSourceFile, Registry, PackagesRepo

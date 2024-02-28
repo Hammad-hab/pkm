@@ -4,9 +4,15 @@
 
 Mojo is a new programming language and while it has many features in it's recent versions, it lacks a package manager. So until Mojo has it's own package manager by Modular, `pkm` is there to temporarily fill that space.
 
-### Quick Start
+## Quick Start
 
 `pkm` has been designed to be simple and extremely user friendly so it's commands are mostly self-explanatory. Following are their uses and descriptions
+
+### Installation
+
+* Run the command `curl -L https://raw.githubusercontent.com/Hammad-hab/pkm/main/install.py >> install.py`
+* This will create a file named `install.py` in your directory
+* After the file has been installed, run `install.py`. The script will automatically install pkm into your system
 
 > #### `pkm install`
 
@@ -43,7 +49,7 @@ Used to check if a `pkm` package has been installed
 
 > #### `pkm config`
 
-Used to print the default configuration of `pkm` 
+Used to print the default configuration of `pkm`
 (**deprecated**)
 
 > #### `pkm update`
@@ -54,8 +60,8 @@ Updates the local package list
           `pkm update`
 
 **Detailed Explanation**
-`pkm` downloads packages from different places so in order to ensure minimal server interaction, `pkm` like `apt`/`apt-get` maintains a `sources.list` which contains all the packages and their locations. 
-If the original repository has a new package, `pkm` won't know until the `sources.list` is updated. 
+`pkm` downloads packages from different places so in order to ensure minimal server interaction, `pkm` like `apt`/`apt-get` maintains a `sources.list` which contains all the packages and their locations.
+If the original repository has a new package, `pkm` won't know until the `sources.list` is updated.
 
 > #### `pkm upload`
 
@@ -64,9 +70,10 @@ Upload a package to the `pkm` repository
 **Syntax**:
          `pkm upload [--record_creds| --no-record-creds | --ignore-stored | --no-ignore-stored]`
 **Attributes**:
+
 * `--record-creds` (`True`/`False`): specify if you want to prevent pkm from storing your credentials to prevent you from  having to login every time you upload a package
 * `--ignore-stored` (`True`/`False`): specify if forcefully want pkm to ignore recorcredentials. This is useful if you want
-to login again.
+  to login again.
 
 > #### `pkm create`
 
@@ -75,7 +82,3 @@ Used to create a repository account
 **Syntax**:
           `pkm create`
 
-### Installation
-* Run the command `curl -L https://raw.githubusercontent.com/Hammad-hab/pkm/main/install.py >> install.py`
-* This will create a file named `install.py` in your directory
-* After the file has been installed, run `install.py`. The script will automatically install pkm into your system

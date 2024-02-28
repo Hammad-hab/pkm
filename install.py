@@ -4,6 +4,11 @@ import shutil
 import uuid
 import subprocess
 from base64 import b64decode
+
+print("Installing dependencies for python2 and lower (pip)")
+os.system("pip install GitPython termcolor firebase-admin rich typer validators tomli")
+print("Installing dependencies for python3 (pip3)")
+os.system("pip3 install GitPython termcolor firebase-admin rich typer validators tomli")
 class GenericProgress(RemoteProgress):
     def update(self, op_code: int, cur_count: str | float, max_count: str | float | None = None, message: str = "") -> None:
         if max_count is not None:
@@ -28,9 +33,8 @@ else:
 clone_repository = "https://github.com/Hammad-hab/pkm.git"
 tool_name = f"pkm@{uuid.uuid4()}"
 target_path = f"/usr/local/bin/{tool_name}"
-# installer_dir = f"/usr/local/bin/{tool_name}/install.py"
 repository = Repo.clone_from(clone_repository, target_path, progress=GenericProgress())
-# shutil.rmtree(installer_dir)
+print("\nSuccessfully cloned repo. Setting up pkm...")
 os.remove(target_path + "/LICENSE")
 shutil.move(f"{target_path}/pkm-core", "/usr/local/bin/")
 shutil.rmtree(target_path)
@@ -46,15 +50,19 @@ with open(f"/usr/local/bin/pkmd/__main__.py", "w") as f:
 SHELL_PROP_SRC = \
 """
 #!/bin/zsh
-python3.10 /usr/local/bin/pkmd/__main__.py $@
+python3 /usr/local/bin/pkmd/__main__.py $@
 """
 
 with open(f"/usr/local/bin/pkm", "w") as f:
+    print("Writing shellscript bindings")
     f.write(SHELL_PROP_SRC)
     f.close()
 
 with open(f"/usr/local/bin/pkmd/certificate.json", "w") as f:
+    print("Creating Repository certificate")
     f.write(b64decode(certificate).decode("utf-8"))
     f.close()
 
+print("Running privilege commands")
 subprocess.run(["chmod", "+x", "/usr/local/bin/pkm"])
+print("Successfully downloaded pkm")
