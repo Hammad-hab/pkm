@@ -1,5 +1,5 @@
 import typer, os, shutil
-from _utils import CONFIG, warn, console, abort, color, success
+from _utils import CONFIG, warn, console, abort, color, success, info
 from _app import PKMManager, readPKMSourceFile, Registry, PackagesRepo
 from _http import PKMGitClone
 from _usrbase import Userbase
@@ -65,7 +65,7 @@ def upload(record_creds:bool=True, ignore_stored:bool=False):
 
 @app.command()
 def has(package_name: str):
-    "Check if a package has been installed"
+    """Check if a package has been installed"""
     console.print(PKMManager.hasInstalledPackage(package_name))
     
 @app.command()
@@ -75,7 +75,7 @@ def config():
 
 @app.command()
 def update():
-    "Reload the registry i.e fetch new packages"
+    """Reload the registry i.e fetch new packages"""
     try:
         pk = PackagesRepo(True)
         success("Successfully updated sources.list")
@@ -84,9 +84,47 @@ def update():
 
 @app.command()
 def create():
-    "Create an account on pkm repository index"
+    """Create an account on pkm repository index"""
     base = Userbase()
     username = input("Username: ")
     password = input("Password: ")
     base.create_account(username, password)
    
+@app.command()
+def delete():
+    "Uninstall pkm"
+    
+    if 'SUDO_USER' in os.environ:
+        username = os.environ['SUDO_USER']
+    else:
+        username = os.getenv('USER') or os.getenv('USERNAME')
+    delete = typer.confirm(color(f"Are you sure you want to delete pkm? (Packages won't be deleted unless explicity specified)", color="yellow"))
+    if not delete:
+        raise typer.Abort()
+    
+    print("Uninstalling pkm...")
+    info("Performing checkups...")
+    if os.path.isdir("/usr/local/bin/pkmd") and os.path.isfile("/usr/local/bin/pkm"):
+        info("Deleting pkmd, admin privileges REQUIRED!")
+        try:
+            shutil.rmtree("/usr/local/bin/pkmd")
+        except:
+            abort("Could not delete pkmd from system", "Deleting pkmd directory")
+        else:
+            success("Successfully removed pkmd. Proceeding to obliterate pkm.sh")
+        
+        try:
+            os.remove("/usr/local/bin/pkm")
+        except:
+            abort("Could not delete /usr/local/bin/pkm.sh", "Deleting pkm script")
+        else:
+            success("Successfully removed pkm.sh")
+            info(f"Goodbye {username}!")
+        ...
+    else:
+        abort("Could not track pkm cli and pkmd source. This can happen if the pkm cli was moved from it's original position.", "Deleting pkm")
+    # delpackages = typer.confirm(f"Delete all packages installed with pkm (default: No)?")
+    # delsinstall = typer.confirm(f"Delete sources.list and install.list (Not recommended)?")
+    # if delpackages:
+    #     info("DELETING PACKAGES INSTALLED WITH pkm")
+        
