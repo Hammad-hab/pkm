@@ -1,8 +1,13 @@
 <div align="center">
   <h1>PKM</h1>
   <h4>Mojo's unofficial community package manager</h4>
+  <p align="center">
+  
+  ![License](https://img.shields.io/badge/License-GPL-green)
+  [![Language](https://img.shields.io/badge/Language-Python-blue)]()
+  [![Mojo](https://img.shields.io/badge/Mojo-8A2BE2)]()
+  </p>
 </div>
-
 
 Mojo is a new programming language and while it has many features in its recent versions, it lacks a package manager. So until Mojo has its own package manager by Modular, `pkm` is there to temporarily fill that space.
 
@@ -27,7 +32,7 @@ Used for installing a package.
 * `--disable-logs`: Silence the `pkm` installer logs. This means that no success or info logs will be shown, only errors
   * `--no-disable-logs`(**default**): This is the *default* value of the en-logs configuration i.e logs are **not** disabled
 * `--pack` (**default**): Mojo has an amazing ability to compile its packages into a
-  .📦 (`.mojopkg`). The `--pack` ensures that the installed package is compiled into a .📦.
+  .📦 (`.mojopkg`). The `--pack` ensures that the installed package is compiled into a .📦
   * `--no-pack`: Like its name suggests, it prevents `pkm` from
     using `mojo package` to compile the package into a .📦
 
