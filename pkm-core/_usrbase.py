@@ -106,6 +106,9 @@ class Userbase:
             # Package is not uploaded yet, upload safe.
             pass
         elif INCLUDED and HAS_ACCESS:
+            """
+                TODO: add INCLUDED and HAS_ACCESS support
+            """
             abort("INCLUDED and HAS_ACCESS is disabled because of certain bugs....", "Uploading")
             override = typer.confirm(color(f"{name} already exists in the registry, are you sure you want to override metadata?", color="yellow"))
             if not override:

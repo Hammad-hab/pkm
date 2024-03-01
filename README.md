@@ -2,12 +2,6 @@
   <h1>PKM</h1>
   <h4>Mojo's unofficial community package manager</h4>
   <p align="center">
-  
-  ![License](https://img.shields.io/badge/License-GPL-green)
-  [![Language](https://img.shields.io/badge/Language-Python-blue)]()
-  [![Mojo](https://img.shields.io/badge/Mojo-8A2BE2)]()
-  </p>
-</div>
 
 Mojo is a new programming language and while it has many features in its recent versions, it lacks a package manager. So until Mojo has its own package manager by Modular, `pkm` is there to temporarily fill that space.
 
