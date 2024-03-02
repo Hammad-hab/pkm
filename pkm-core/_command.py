@@ -1,5 +1,5 @@
 import typer, os, shutil
-from _utils import CONFIG, warn, console, abort, color, success, info
+from _utils import CONFIG, warn, console, abort, color, success, info, findNearest
 from _app import PKMManager, readPKMSourceFile, Registry, PackagesRepo
 from _http import PKMGitClone
 from _usrbase import Userbase
@@ -7,7 +7,11 @@ app = typer.Typer(name="pkm", )
 
 
 @app.command()
-def install(package_name: str, disable_logs:bool=False, pack:bool=True):
+def install(
+        package_name: str, 
+        disable_logs:bool=False, 
+        pack:bool=True
+    ):
     """
     Install a mojo package. You can disable logs by setting disable_logs=True
     If you want a folder instead of a .📦 you can disable pack (not recommended)
@@ -23,14 +27,18 @@ def install(package_name: str, disable_logs:bool=False, pack:bool=True):
     manager.fetchPackage(package_name)
     
 @app.command()
-def purge(package_name: str, disable_logs:bool=False, ):
+def purge(
+        package_name: str, 
+        disable_logs:bool=False, 
+        force:bool=typer.Option(help="Forcefully delete a package, no questions asked.",default=False)
+    ):
     """
     Delete (purge) a package from your system. You can disable logs by setting disable_logs=True.
     """
     
     CONFIG["en-logs"] = not disable_logs
     if PKMManager.hasInstalledPackage(package_name):
-        delpackage = typer.confirm(color(f"Are you sure you want to delete {package_name}?", color="yellow"))
+        delpackage = typer.confirm(color(f"Are you sure you want to delete {package_name}?", color="yellow")) if not force else True
         if not delpackage:
             raise typer.Abort()
         warn(f"Deleting {package_name}...")
@@ -70,7 +78,7 @@ def has(package_name: str):
     
 @app.command()
 def config():
-    "Print the default Configuration"
+    """Print the default Configuration"""
     console.print_json(data=CONFIG)
 
 @app.command()
@@ -83,22 +91,43 @@ def update():
         abort(f"Failed to update sources.list because of an internal error: {e!r}", "Updating sources.list")
 
 @app.command()
-def create():
-    """Create an account on pkm repository index"""
-    base = Userbase()
-    username = input("Username: ")
-    password = input("Password: ")
-    base.create_account(username, password)
-   
-@app.command()
-def delete():
-    "Uninstall pkm"
+def create(
+        what:str, 
+        autologin:bool=typer.Option(help="Automatically login after creating account. Works if what=account", default=False)
+    ):
+    """Create an account on pkm repository index\n
+    what: string = account OR package
+    """
+    if what != "account" and what != "package": 
+        abort(f"Invalid value for what, {what}. Did you instead mean {findNearest(what, ['account', 'package'])}?", "Creating account/package")
     
+    if what == "account":
+        base = Userbase()
+        username = input("Username: ")
+        password = input("Password: ")
+        base.create_account(username, password, autologin)
+    elif what == "package":
+        print("Creating package...")
+        print("TODO: Implement this feature 😉")
+        # package_name = input("Name of Package: ")
+        # make_repo = typer.confirm("Initalize git repository?")
+        # make_publish = typer.confirm("Initalize publish script?")
+
+        ...
+    
+@app.command()
+def delete(
+        force:bool=typer.Option(help="Forcefully delete pkm, no questions asked 😉", default=False), 
+        silent:bool=typer.Option(help="Silence the logs, only recieve error messages 🤫", default=False)
+    ):
+    """Uninstall pkm"""
+    CONFIG["en-logs"] = False if not silent else True
     if 'SUDO_USER' in os.environ:
         username = os.environ['SUDO_USER']
     else:
         username = os.getenv('USER') or os.getenv('USERNAME')
-    delete = typer.confirm(color(f"Are you sure you want to delete pkm? (Packages won't be deleted unless explicity specified)", color="yellow"))
+        
+    delete = typer.confirm(color(f"Are you sure you want to delete pkm? (Packages won't be deleted unless explicity specified)", color="yellow")) if not force else True
     if not delete:
         raise typer.Abort()
     
@@ -122,9 +151,4 @@ def delete():
             info(f"Goodbye {username}!")
         ...
     else:
-        abort("Could not track pkm cli and pkmd source. This can happen if the pkm cli was moved from it's original position.", "Deleting pkm")
-    # delpackages = typer.confirm(f"Delete all packages installed with pkm (default: No)?")
-    # delsinstall = typer.confirm(f"Delete sources.list and install.list (Not recommended)?")
-    # if delpackages:
-    #     info("DELETING PACKAGES INSTALLED WITH pkm")
-        
+        abort("Could not track pkm cli and pkmd source. This can happen if the pkm cli was moved from it's original position.", "Deleting pkm")        
