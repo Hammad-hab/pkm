@@ -151,7 +151,7 @@ def delete(
         silent:bool=typer.Option(help="Silence the logs, only recieve error messages 🤫", default=False)
     ):
     """Uninstall pkm"""
-    CONFIG["en-logs"] = False if not silent else True
+    CONFIG["en-logs"] = False if silent else True
     
         
     delete = typer.confirm(color(f"Are you sure you want to delete pkm? (Packages won't be deleted unless explicity specified)", color="yellow")) if not force else True
@@ -178,4 +178,4 @@ def delete(
             info_(f"Goodbye {CONFIG['usname']}!")
         ...
     else:
-        abort("Could not track pkm cli and pkmd source. This can happen if the pkm cli was moved from it's original position.", "Deleting pkm")        
+        abort("Could not track pkm cli and pkmd source. This can happen if the pkm cli was moved from it's original position.", "Deleting pkm")
