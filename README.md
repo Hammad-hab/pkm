@@ -15,6 +15,7 @@ Mojo is a new programming language and while it has many features in its recent 
 2) This will create a file named `install.py` in the current directory
 3) After the file has been installed, run `install.py`. The script will automatically install pkm into your system
 
+To check if `pkm` has been installed correctly, run `pkm info`. If you encounter an error, please report it at `issues` tab.
 
 > #### `pkm install`
 
@@ -105,3 +106,7 @@ Delete `pkm` from your system
 `--force`: Forcefully delete a `pkm` without any confirmation prompts.
 
 `--silent`: Disable all kind of logs (error's are still shown).
+
+> #### `pkm info`
+
+Get info regarding your `pkm` copy, usually it's location, version etc.

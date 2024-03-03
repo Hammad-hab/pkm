@@ -1,5 +1,6 @@
 import typer, os, shutil
-from _utils import CONFIG, warn, console, abort, color, success, info, findNearest
+from _utils import CONFIG, warn, console, abort, color, success, findNearest
+from _utils import info as info_
 from _app import PKMManager, readPKMSourceFile, Registry, PackagesRepo
 from _http import PKMGitClone
 from _usrbase import Userbase
@@ -158,9 +159,9 @@ def delete(
         raise typer.Abort()
     
     print("Uninstalling pkm...")
-    info("Performing checkups...")
+    info_("Performing checkups...")
     if os.path.isdir("/usr/local/bin/pkmd") and os.path.isfile("/usr/local/bin/pkm"):
-        info("Deleting pkmd, admin privileges REQUIRED!")
+        info_("Deleting pkmd, admin privileges REQUIRED!")
         try:
             shutil.rmtree("/usr/local/bin/pkmd")
         except:
@@ -174,7 +175,7 @@ def delete(
             abort("Could not delete /usr/local/bin/pkm.sh", "Deleting pkm script")
         else:
             success("Successfully removed pkm.sh")
-            info(f"Goodbye {CONFIG['usname']}!")
+            info_(f"Goodbye {CONFIG['usname']}!")
         ...
     else:
         abort("Could not track pkm cli and pkmd source. This can happen if the pkm cli was moved from it's original position.", "Deleting pkm")        
