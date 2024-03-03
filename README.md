@@ -81,13 +81,13 @@ Upload a package to the `pkm` repository
 
 > #### `pkm create`
 
-Used to create a repository account
+Used to create a repository account/package
 
 **Syntax**:
           `pkm create <account || package>`
 
 > `pkm create account`
-
+Create an account. It prompts you for the username and password for your registration.
 **Options**:
 
 * `--autologin` (**default=`False`**): Automatically login as soon as you create the account
@@ -110,3 +110,13 @@ Delete `pkm` from your system
 > #### `pkm info`
 
 Get info regarding your `pkm` copy, usually it's location, version etc.
+
+### Upload a package
+
+To upload a package you can use `pkm upload` command built into `pkm`. Following are the steps you should generally follow in order to upload a package:
+1) Upload your package to github in any way you choose
+2) Run `pkm upload`
+3) The cli will prompt you for your login details and package information
+4) Type in your username and password if you have an account. If you do not have an account, you can create one by running `pkm create account` (See above for usage)
+5) Insert the package name and repository
+6) Press [`ENTER`] to upload the package to the repository
