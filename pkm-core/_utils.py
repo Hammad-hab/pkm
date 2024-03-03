@@ -22,10 +22,32 @@ class FNCallOnce:
         else:
             raise Exception("Function (FNCallOnce Wrapper) has already been called")
 
+if 'SUDO_USER' in os.environ:
+        username = os.environ['SUDO_USER']
+else:
+        username = os.getenv('USER') or os.getenv('USERNAME')
+
+information = \
+"""
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃  ██████╗ ██╗  ██╗███╗   ███╗ ┃   \033[1m\033[4mInformation:\033[0m
+┃  ██╔══██╗██║ ██╔╝████╗ ████║ ┃     
+┃  ██████╔╝█████╔╝ ██╔████╔██║ ┃     Version: \033[3m{version}\033[0m     
+┃  ██╔═══╝ ██╔═██╗ ██║╚██╔╝██║ ┃     Build: {build}
+┃  ██║     ██║  ██╗██║ ╚═╝ ██║ ┃     Script Path: \033[32m/usr/local/bin/pkm\033[0m
+┃  ╚═╝     ╚═╝  ╚═╝╚═╝     ╚═╝ ┃     Build Path: \033[32m/usr/local/bin/pkmd\033[0m
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛     Description: \033[36mYour friendly unofficial mojo package manager\033[0m
+"""        
+
 CONFIG = {
+    "build-status": "unstable",
     "en-logs": True,
-    "pack-package": True
+    "pack-package": True,
+    "usname": username,
+    "version": "1.0.0",
 }
+
+CONFIG["information"] = information.format(version=color(CONFIG["version"], "cyan"), build=color(CONFIG["build-status"], "red"))
 
 def strict_one_call(wrapper:Callable):
     return FNCallOnce(wrapper)

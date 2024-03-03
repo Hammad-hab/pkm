@@ -3,9 +3,12 @@ from _utils import CONFIG, warn, console, abort, color, success, info, findNeare
 from _app import PKMManager, readPKMSourceFile, Registry, PackagesRepo
 from _http import PKMGitClone
 from _usrbase import Userbase
+import subprocess as sb
 app = typer.Typer(name="pkm", )
 
-
+@app.command()
+def info():
+    print(CONFIG["information"])
 @app.command()
 def install(
         package_name: str, 
@@ -71,6 +74,7 @@ def upload(record_creds:bool=True, ignore_stored:bool=False):
     base.uploadPackage(terminal_mode=True)
     # abort("Command not supported yet...work in progress.")
 
+
 @app.command()
 def has(package_name: str):
     """Check if a package has been installed"""
@@ -108,11 +112,36 @@ def create(
         base.create_account(username, password, autologin)
     elif what == "package":
         print("Creating package...")
-        print("TODO: Implement this feature 😉")
-        # package_name = input("Name of Package: ")
-        # make_repo = typer.confirm("Initalize git repository?")
+        package_name = input("Name of Package: ")
+        make_repo = typer.confirm("Initalize git repository?")
+        if not make_repo:
+            connect_repo = typer.confirm("Connect to existing git repository?")
+            if connect_repo:
+                repo_name = input("Repo URL:")
         # make_publish = typer.confirm("Initalize publish script?")
-
+        if not package_name:
+            print("Incomplete input, PACKAGE_NAME missing")
+            exit(-1)
+        os.mkdir(package_name)
+        os.chdir(package_name)
+        os.mkdir("src")
+        os.chdir("src")
+        with open("main.🔥", "w") as f:
+            f.write("fn main() raises:\n\tprint('Hello from Mojo🔥!')")
+            
+        if make_repo:
+            sb.run(["git", "init"])
+        else:
+            sb.run(["git", "remote", "add", "origin", repo_name])
+            branch = input("Branch:")
+            sb.run(["git", "branch", "-M", branch])
+        with open("package.toml", "w") as f:
+            version = input("Package version: ")
+            f.write(f"[info]\nname={package_name}version={version}\n\n[Creator]\nname={CONFIG['usname']}")
+            
+        with open("README.md", "w") as f:
+            f.write(f"# {package_name}\n\n### v{version}\nWrite your project documentation here!")
+            
         ...
     
 @app.command()
@@ -122,10 +151,7 @@ def delete(
     ):
     """Uninstall pkm"""
     CONFIG["en-logs"] = False if not silent else True
-    if 'SUDO_USER' in os.environ:
-        username = os.environ['SUDO_USER']
-    else:
-        username = os.getenv('USER') or os.getenv('USERNAME')
+    
         
     delete = typer.confirm(color(f"Are you sure you want to delete pkm? (Packages won't be deleted unless explicity specified)", color="yellow")) if not force else True
     if not delete:
@@ -148,7 +174,7 @@ def delete(
             abort("Could not delete /usr/local/bin/pkm.sh", "Deleting pkm script")
         else:
             success("Successfully removed pkm.sh")
-            info(f"Goodbye {username}!")
+            info(f"Goodbye {CONFIG['usname']}!")
         ...
     else:
         abort("Could not track pkm cli and pkmd source. This can happen if the pkm cli was moved from it's original position.", "Deleting pkm")        

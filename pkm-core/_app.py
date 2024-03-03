@@ -36,3 +36,4 @@ class PKMManager:
             abort(f"{e!r}", "Installing Package")
             raise
         success(f"Successfully installed {package}")
+        

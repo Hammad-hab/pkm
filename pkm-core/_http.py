@@ -1,16 +1,12 @@
 import shutil
 import git
 import os
-from _utils import info, warn, success, Progress,errmsg
+from _utils import info, warn, success, Progress,errmsg, CONFIG
 
 
-if 'SUDO_USER' in os.environ:
-    username = os.environ['SUDO_USER']
-else:
-    username = os.getenv('USER') or os.getenv('USERNAME')
 class PKMGitClone:
     _TMP_FOLDER_NAME = "tmp" # name of the temporary folder
-    _MND_DIR = f"/Users/{username}/.modular/pkg/packages.modular.com_mojo/lib/mojo/" # name of the mojo_modules folder
+    _MND_DIR = f"/Users/{CONFIG['usname']}/.modular/pkg/packages.modular.com_mojo/lib/mojo/" # name of the mojo_modules folder
     PACK = False
     
     def __init__(self, url:str, pkgname:str) -> None:

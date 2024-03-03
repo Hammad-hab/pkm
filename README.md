@@ -11,9 +11,10 @@ Mojo is a new programming language and while it has many features in its recent 
 
 ### Installation
 
-* Run the command `curl -L https://raw.githubusercontent.com/Hammad-hab/pkm/main/install.py >> install.py`
-* This will create a file named `install.py` in your directory
-* After the file has been installed, run `install.py`. The script will automatically install pkm into your system
+1) Run the command `curl -L https://raw.githubusercontent.com/Hammad-hab/pkm/main/install.py >> install.py`
+2) This will create a file named `install.py` in the current directory
+3) After the file has been installed, run `install.py`. The script will automatically install pkm into your system
+
 
 > #### `pkm install`
 
@@ -40,6 +41,7 @@ Used for purging (removing/uninstalling) a package.
 
 * `--disable-logs`: Silence the `pkm` installer logs. This means that no success or info logs will be shown, only errors
   * `--no-disable-logs`(**default**): This is the *default* value of the en-logs configuration i.e logs are **not** disabled
+* `--force`: Forcefully delete a package without any confirmation prompts.
 
 > #### `pkm has`
 
@@ -81,4 +83,25 @@ Upload a package to the `pkm` repository
 Used to create a repository account
 
 **Syntax**:
-          `pkm create`
+          `pkm create <account || package>`
+
+> `pkm create account`
+
+**Options**:
+
+* `--autologin` (**default=`False`**): Automatically login as soon as you create the account
+
+> `pkm create package`
+
+Initialize an empty package with ease. When this command runs it prompts you for the package name, version et cetera.
+It will create a `./src` directory, a `README.md `, `package.toml `and a `main.🔥` file.
+
+> #### `pkm delete`
+
+Delete `pkm` from your system
+
+**Options**:
+
+`--force`: Forcefully delete a `pkm` without any confirmation prompts.
+
+`--silent`: Disable all kind of logs (error's are still shown).
