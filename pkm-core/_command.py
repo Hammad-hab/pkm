@@ -119,7 +119,6 @@ def create(
             connect_repo = typer.confirm("Connect to existing git repository?")
             if connect_repo:
                 repo_name = input("Repo URL:")
-        # make_publish = typer.confirm("Initalize publish script?")
         if not package_name:
             print("Incomplete input, PACKAGE_NAME missing")
             exit(-1)
@@ -136,9 +135,9 @@ def create(
             sb.run(["git", "remote", "add", "origin", repo_name])
             branch = input("Branch:")
             sb.run(["git", "branch", "-M", branch])
-        with open("package.toml", "w") as f:
+        with open(".pkmrc", "w") as f:
             version = input("Package version: ")
-            f.write(f"[info]\nname={package_name}version={version}\n\n[Creator]\nname={CONFIG['usname']}")
+            f.write(f"[info]\nname=\"{package_name}\"\nversion=\"{version}\"\n\n[Creator]\nname={CONFIG['usname']}\n\n[meta]\ndocs=\"INSERT_DOCUMENTATION_PATH\"")
             
         with open("README.md", "w") as f:
             f.write(f"# {package_name}\n\n### v{version}\nWrite your project documentation here!")

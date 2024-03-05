@@ -4,7 +4,7 @@
     TODO: Add code to help support package uploading process
     
 """
-from _utils import getFirestoreDocumentRaw, abort, success, errmsg
+from _utils import getFirestoreDocumentRaw, abort, success, errmsg, warn, info
 from _registry import Registry
 from google.cloud.firestore import ArrayUnion, ArrayRemove
 import re
@@ -13,6 +13,8 @@ import typer
 from termcolor import colored as color
 from tomli import loads
 import os
+from urllib.parse import urlparse
+import requests
 
 class Userbase:
     
@@ -98,7 +100,21 @@ class Userbase:
             errmsg("Invalid repository URL...RSTART")
             print("---RESTART---")
             self.uploadPackage()
-            
+        
+        parsedURL = urlparse(repo)
+        if not parsedURL.scheme or not parsedURL.netloc:
+            abort(f"Invalid URL {repo}", "reading package metadata")
+        elif parsedURL.netloc != "github.com":
+            warn(f"Provided url ({repo}) is not a github repo url.")
+    
+        info("Locating .pkmrc in provided github repository...")
+        BASE = f"https://raw.githubusercontent.com/{parsedURL.path}/.pkmrc"
+        response = requests.get(BASE)
+        if response.status_code != 200:
+            errmsg(f"Got HTTP status code {response.status_code} ({response.reason}). Proceeding program execution without .pkmrc")
+            info("Since .pkmrc was not found, package README.md cannot be fetched, pkm will have to bruteforce for finding README.md")
+        
+        
         INCLUDED = f'{name}={repo}' in self.lspackages_db_pointer.get().to_dict()["lspackages"]
         HAS_ACCESS = f'{name}={repo}' in self.users_db_pointer.get().to_dict()[self.pusername]["hasAccessTo"]
         if not INCLUDED:
