@@ -47,13 +47,15 @@ class Registry:
     def writeDefault(self):
         self.write_to(Registry.PATH_FILE)
 
-def readPKMSourceFile(name:str) -> Registry:
+def readPKMSourceFile(name:str, retlist=False) -> Registry | list[str]:
     if not os.path.isfile(name):
         with open(name, "x+") as fread:
             return Registry()
     with open(name, "r+") as fread:
         lines = fread.readlines()
         lines = [ln.replace("\n", '') for ln in lines]
+        if retlist:
+            return lines
         return Registry.create_from_list(lines)
     
     

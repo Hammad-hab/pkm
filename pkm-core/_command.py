@@ -5,6 +5,9 @@ from _app import PKMManager, readPKMSourceFile, Registry, PackagesRepo
 from _http import PKMGitClone
 from _usrbase import Userbase
 import subprocess as sb
+import tkinter as tk
+
+
 app = typer.Typer(name="pkm", )
 
 @app.command()
@@ -178,3 +181,37 @@ def delete(
         ...
     else:
         abort("Could not track pkm cli and pkmd source. This can happen if the pkm cli was moved from it's original position.", "Deleting pkm")
+
+@app.command()
+def listpkgs(
+    gui:bool=typer.Option(help="Display all the available packages in a GUI list instead of the terminal", default=False), 
+):
+    """
+    Lists all the available packages
+    """
+    packages: list[str] = readPKMSourceFile(Registry.PATH_FILE, True)
+    if gui:
+        root = tk.Tk()
+        root.title("PKM packages")
+        root.resizable(0,0)
+        # root.geometry("250x200")
+        LIST = tk.Listbox(root)
+        i = 0
+        for package in packages:
+            package = package.split("=")
+            LIST.insert(i, package[0])
+            i += 1
+        
+        # LIST.bind("<Double-1>", lambda x: root.clipboard_append(packages[LIST.curselection()[0]].split("=")[0]))
+        def clipboard_write():
+            root.clipboard_clear()
+            item = LIST.curselection()[0]
+            item_name = packages[item].split("=")[0]
+            root.clipboard_append(item_name)
+        LIST.bind("<Double-1>", lambda x: clipboard_write())
+        LIST.focus()
+        LIST.pack(padx=10, pady=10,)
+        root.mainloop()
+    else:
+        for package in packages:
+            print(package)

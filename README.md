@@ -87,8 +87,8 @@ Used to create a repository account/package
           `pkm create <account || package>`
 
 > `pkm create account`
-Create an account. It prompts you for the username and password for your registration.
-**Options**:
+> Create an account. It prompts you for the username and password for your registration.
+> **Options**:
 
 * `--autologin` (**default=`False`**): Automatically login as soon as you create the account
 
@@ -111,9 +111,20 @@ Delete `pkm` from your system
 
 Get info regarding your `pkm` copy, usually it's location, version etc.
 
+> #### `pkm listpkgs`
+
+List all the available packages in the pkm repository
+
+**Options**:
+
+`--gui`: Tells pkm to list the packages in a GUI instead of the terminal
+
+You can double click any item on the list to copy it (GUI only).
+
 ### Upload a package
 
 To upload a package you can use `pkm upload` command built into `pkm`. Following are the steps you should generally follow in order to upload a package:
+
 1) Upload your package to github in any way you choose
 2) Run `pkm upload`
 3) The cli will prompt you for your login details and package information

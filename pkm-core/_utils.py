@@ -8,6 +8,7 @@ from rich.console import Console
 from git import RemoteProgress
 from Levenshtein import distance
 import os
+from extends import EXTENSIONS
 
 console = Console()
 class FNCallOnce:
@@ -55,13 +56,13 @@ def strict_one_call(wrapper:Callable):
 def abort(err:str, process:str):
     print(color(color="red",text=
         f"Error while attempting to {process}\n\t" \
-        f"{err}\n\tExiting with code -1" 
+        f"{err}\n\tExiting with code -1", attrs=EXTENSIONS["error_attrs"]
     ))
     exit(-1)
 
 def errmsg(err:str):
     print(color(color="red",text=
-        f"ERROR: {err}"
+        f"ERROR: {err}", attrs=EXTENSIONS["error_attrs"]
     ))
 
 
@@ -70,21 +71,21 @@ def info(info:str):
     if not CONFIG["en-logs"]:
         return None
     print(color(color="light_blue",text=
-        f"INFO: {info}" 
+        f"INFO: {info}", attrs=EXTENSIONS["info_attrs"]
     ))
 
 def success(message:str):
     if not CONFIG["en-logs"]:
         return None
     print(color(color="light_green",text=
-        f"SUCCESS: {message}" 
+        f"SUCCESS: {message}", attrs=EXTENSIONS["success_attrs"]
     ))
 
 def warn(message:str):
     if not CONFIG["en-logs"]:
         return None
     print(color(color="yellow",text=
-        f"WARNING: {message}" 
+        f"WARNING: {message}", attrs=EXTENSIONS["warning_attrs"]
     ))
     
 class Progress(RemoteProgress):
@@ -92,11 +93,11 @@ class Progress(RemoteProgress):
         if max_count is not None:
             completed = int(cur_count / max_count * 50)  # Using 50 characters for the progress bar #type:ignore
             remaining = 50 - completed
-            progress_bar = "[%s%s]" % ('▓' * completed, '░' * remaining)
+            progress_bar = EXTENSIONS["progress_bar_start"] + "%s%s" + EXTENSIONS["progress_bar_end"] % (EXTENSIONS["progress_fill"] * completed, EXTENSIONS["progress_absence"] * remaining)
             sys.stdout.write("\r%s" % progress_bar)
             sys.stdout.flush()
         else:
-            sys.stdout.write("\r[%s]" % ('▓' * int(cur_count / 10))) #type:ignore
+            sys.stdout.write(EXTENSIONS["progress_bar_start"] + "\r%s" + EXTENSIONS["progress_bar_end"] % ('▓' * int(cur_count / 10))) #type:ignore
             sys.stdout.flush()
         sys.stdout.write(" %s" % message)
         sys.stdout.flush()

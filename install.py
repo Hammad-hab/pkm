@@ -6,9 +6,9 @@ import subprocess
 from base64 import b64decode
 
 print("Installing dependencies for python2 and lower (pip)")
-os.system("pip install GitPython termcolor firebase-admin rich typer validators tomli")
+os.system("python3 -m pip install GitPython termcolor firebase-admin rich typer validators tomli")
 print("Installing dependencies for python3 (pip3)")
-os.system("pip3 install GitPython termcolor firebase-admin rich typer validators tomli")
+os.system("python3 -m pip3 install GitPython termcolor firebase-admin rich typer validators tomli")
 class GenericProgress(RemoteProgress):
     def update(self, op_code: int, cur_count: str | float, max_count: str | float | None = None, message: str = "") -> None:
         if max_count is not None:
