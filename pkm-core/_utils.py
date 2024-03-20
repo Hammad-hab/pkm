@@ -45,7 +45,7 @@ CONFIG = {
     "en-logs": True,
     "pack-package": True,
     "usname": username,
-    "version": "1.0.0",
+    "version": "1.0.1",
 }
 
 CONFIG["information"] = information.format(version=color(CONFIG["version"], "cyan"), build=color(CONFIG["build-status"], "red"))

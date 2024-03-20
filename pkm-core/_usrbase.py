@@ -80,6 +80,7 @@ class Userbase:
                     f"username=\"{self.pusername}\"\n"\
                     f"password=\"{self.ppassword}\""
                     )
+                
 
     def getLoggedInUser(self):
         return self.pusername
@@ -87,7 +88,7 @@ class Userbase:
     def getUserAccessablePackages(self):
         return self.target_metadata["hasAccessTo"]
     
-    def uploadPackage(self, package_name:str="", repository:str="", terminal_mode=False):
+    def uploadPackage(self, package_name:str="", repository:str="", terminal_mode=False, version="0"):
         # if not self.getLoggedInUser():
         #     abort("User not logged in", "Initiating upload process")
         name = package_name if not terminal_mode else input("Name of package [Must not contain spaces and/or capital letters] ").strip()
@@ -124,7 +125,8 @@ class Userbase:
                     "pkgname": name,
                     "pkgrepo": repo,
                     "pkgcreator": self.pusername,
-                    "haspkmrc": response.status_code == 200
+                    "haspkmrc": response.status_code == 200,
+                    "version": version
                 }])
             })
             LCopy = self.users_db_pointer.get().to_dict()[self.pusername]

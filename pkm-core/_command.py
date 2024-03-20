@@ -1,10 +1,12 @@
-import typer, os, shutil
+import typer, os, shutil, tomli
 from _utils import CONFIG, warn, console, abort, color, success, findNearest
 from _utils import info as info_
 from _app import PKMManager, readPKMSourceFile, Registry, PackagesRepo
 from _http import PKMGitClone
 from _usrbase import Userbase
 import subprocess as sb
+from _pkgcreator import PackageCreator
+
 
 try:
     import tkinter as tk
@@ -79,9 +81,19 @@ def upload(record_creds:bool=True, ignore_stored:bool=False):
         ignore_stored (True/False): specify if you forcefully want pkm to ignore recorded credentials. This is useful if you want
         to login again.
     """
+    print("Scanning For a potential package...")
     base = Userbase(record=record_creds, ignore_record=ignore_stored)
     base.login(terminal_mode=True)
-    base.uploadPackage(terminal_mode=True)
+    if os.path.isfile(".pkmrc"):
+        success("Found a package (.pkmrc)! Automatically uploading project....")
+        with open(".pkmrc", "r") as rc:
+            contents = tomli.loads(rc.read())
+            contents["pkm-repo"]
+            base.uploadPackage(name=contents["pkm-repo"]["name"], repository=contents["pkm-repo"]["repo"], version=contents["general"]["version"])
+        ...
+    else:
+        warn(".pkmrc not found, switching to TERMINAL_MODE")
+        base.uploadPackage(terminal_mode=True)
     # abort("Command not supported yet...work in progress.")
 
 
@@ -123,34 +135,7 @@ def create(
         base.create_account(username, password, autologin)
     elif what == "package":
         print("Creating package...")
-        package_name = input("Name of Package: ")
-        make_repo = typer.confirm("Initalize git repository?")
-        if not make_repo:
-            connect_repo = typer.confirm("Connect to existing git repository?")
-            if connect_repo:
-                repo_name = input("Repo URL:")
-        if not package_name:
-            print("Incomplete input, PACKAGE_NAME missing")
-            exit(-1)
-        os.mkdir(package_name)
-        os.chdir(package_name)
-        os.mkdir("src")
-        os.chdir("src")
-        with open("main.🔥", "w") as f:
-            f.write("fn main() raises:\n\tprint('Hello from Mojo🔥!')")
-            
-        if make_repo:
-            sb.run(["git", "init"])
-        else:
-            sb.run(["git", "remote", "add", "origin", repo_name])
-            branch = input("Branch:")
-            sb.run(["git", "branch", "-M", branch])
-        with open(".pkmrc", "w") as f:
-            version = input("Package version: ")
-            f.write(f"[info]\nname=\"{package_name}\"\nversion=\"{version}\"\n\n[Creator]\nname={CONFIG['usname']}\n\n[meta]\ndocs=\"INSERT_DOCUMENTATION_PATH\"")
-            
-        with open("README.md", "w") as f:
-            f.write(f"# {package_name}\n\n### v{version}\nWrite your project documentation here!")
+        pkgcreator = PackageCreator()
             
         ...
     
