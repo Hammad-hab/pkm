@@ -1,7 +1,9 @@
 <div align="center">
     <h1>Getting Started</h1>
-    <small>A small tutorial regarding getting started with pkm</small>
     <br/>
+    <img src="icon.png" width="100px"/>
+    <br/>
+    <small>A small tutorial regarding getting started with pkm</small>
     <br/>
     <img src="https://img.shields.io/badge/Level:%20-Easy-green"/>
 </div>

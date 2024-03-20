@@ -1,5 +1,6 @@
 <div align="center">
   <h1>PKM</h1>
+  <img src="docs/icon.png" width="100px"/>
   <h4>Mojo's unofficial community package manager</h4>
   <p align="center">
 </div>
