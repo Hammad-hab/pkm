@@ -115,11 +115,17 @@ class Userbase:
             info("Since .pkmrc was not found, package README.md cannot be fetched, pkm will have to bruteforce for finding README.md")
         
         
-        INCLUDED = f'{name}={repo}' in self.lspackages_db_pointer.get().to_dict()["lspackages"]
+        INCLUDED = f'{name}={repo}' in [x["dinfo"] for x in self.lspackages_db_pointer.get().to_dict()["lspackages"]]
         HAS_ACCESS = f'{name}={repo}' in self.users_db_pointer.get().to_dict()[self.pusername]["hasAccessTo"]
         if not INCLUDED:
             self.lspackages_db_pointer.update({
-                "lspackages": ArrayUnion([f'{name}={repo}'])
+                "lspackages": ArrayUnion([{
+                    "dinfo": f'{name}={repo}',
+                    "pkgname": name,
+                    "pkgrepo": repo,
+                    "pkgcreator": self.pusername,
+                    "haspkmrc": response.status_code == 200
+                }])
             })
             LCopy = self.users_db_pointer.get().to_dict()[self.pusername]
             LCopy["hasAccessTo"].append(f'{name}={repo}')

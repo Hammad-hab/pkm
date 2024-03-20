@@ -70,8 +70,9 @@ class PackagesRepo:
             if not self.packages:
                 self.packages = {}
             self.packages_l: list[str] = self.packages["lspackages"]
+            print(self.packages_l)
             with open(Registry.PATH_FILE, "w") as fwrite:
-                fwrite.writelines([x + '\n' for x in self.packages_l])
+                fwrite.writelines([x["dinfo"] + '\n' for x in self.packages_l])
             self.islocal = False
             if force_reload:
                 success("Fetched new packages from Registry.")

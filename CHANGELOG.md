@@ -15,3 +15,4 @@
 * Added `CHANGELOG` for `v1.0.0` and onwards
 * Updated documentation
 * Tkinter bug fix (`Module not found`)
+* Changed architecture to contain more complex information and to support scalability

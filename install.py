@@ -7,9 +7,11 @@ from base64 import b64decode
 
 PYTHON_V = "python3.11"
 print("Installing dependencies for python2 and lower (pip)")
-os.system(f"{PYTHON_V} -m pip install GitPython termcolor firebase-admin rich typer validators tomli Levenshtein")
+os.system(f"sudo {PYTHON_V} -m pip install GitPython termcolor firebase-admin rich typer validators tomli Levenshtein")
 print("Installing dependencies for python3 (pip3)")
-os.system(F"{PYTHON_V} -m pip3 install GitPython termcolor firebase-admin rich typer validators tomli Levenshtein")
+os.system(F"sudo {PYTHON_V} -m pip3 install GitPython termcolor firebase-admin rich typer validators tomli Levenshtein")
+os.system("clear")
+print("Starting Certificate Creation and Install program....")
 class GenericProgress(RemoteProgress):
     def update(self, op_code: int, cur_count: str | float, max_count: str | float | None = None, message: str = "") -> None:
         if max_count is not None:
@@ -63,27 +65,33 @@ else:
     username = os.getenv('USER') or os.getenv('USERNAME')
 
 
+print("CLONING Repository")
 clone_repository = "https://github.com/Hammad-hab/pkm.git"
 tool_name = f"pkm@{uuid.uuid4()}"
 target_path = f"/usr/local/bin/{tool_name}"
 repository = Repo.clone_from(clone_repository, target_path, progress=GenericProgress())
 print("\nSuccessfully cloned repo. Setting up pkm...")
 os.remove(target_path + "/LICENSE")
+print("Deleted LICENSE")
 shutil.move(f"{target_path}/pkm-core", "/usr/local/bin/")
+print("Extracted Main executable directory")
 shutil.rmtree(target_path)
+print("Deleteing temporary directory...")
+
 os.rename(f"/usr/local/bin/pkm-core", f"/usr/local/bin/pkmd")
 with open(f"/usr/local/bin/pkmd/__main__.py", "r") as f:
+    
     contents = f.read().replace("INSTALLER<INSERT_PYTHON_PATH>", "!" + subprocess.run(["which", PYTHON_V], capture_output=True).stdout.decode("utf-8"))
     f.close()
     
 with open(f"/usr/local/bin/pkmd/__main__.py", "w") as f:
     f.write(contents)
     f.close()
-
+    
 SHELL_PROP_SRC = \
 f"""
 #!/bin/zsh
-{PYTHON_V} /usr/local/bin/pkmd/__main__.py $@
+sudo {PYTHON_V} /usr/local/bin/pkmd/__main__.py $@
 """
 
 with open(f"/usr/local/bin/pkm", "w") as f:
@@ -97,5 +105,5 @@ with open(f"/usr/local/bin/pkmd/certificate.json", "w") as f:
     f.close()
 
 print("Running privilege commands")
-subprocess.run(["chmod", "+x", "/usr/local/bin/pkm"])
+subprocess.run(["sudo","chmod", "+x", "/usr/local/bin/pkm"])
 print("Successfully downloaded pkm")

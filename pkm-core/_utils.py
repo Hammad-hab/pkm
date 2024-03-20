@@ -34,7 +34,7 @@ information = \
 ┃  ██████╗ ██╗  ██╗███╗   ███╗ ┃   \033[1m\033[4mInformation:\033[0m
 ┃  ██╔══██╗██║ ██╔╝████╗ ████║ ┃                                                                                            
 ┃  ██████╔╝█████╔╝ ██╔████╔██║ ┃     Version: \033[3m{version}\033[0m     
-┃  ██╔═══╝ ██╔═██╗ ██║╚██╔╝██║ ┃     Build: {build}
+┃  ██╔═══╝ ██╔═██╗ ██║╚██╔╝██║ ┃     Build: {build} (Supports MacOS)
 ┃  ██║     ██║  ██╗██║ ╚═╝ ██║ ┃     Script Path: \033[32m/usr/local/bin/pkm\033[0m
 ┃  ╚═╝     ╚═╝  ╚═╝╚═╝     ╚═╝ ┃     Build Path: \033[32m/usr/local/bin/pkmd\033[0m
 ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛     Description: \033[36mYour friendly unofficial mojo package manager\033[0m

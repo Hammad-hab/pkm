@@ -102,6 +102,7 @@ def update():
         pk = PackagesRepo(True)
         success("Successfully updated sources.list")
     except Exception as e:
+        raise
         abort(f"Failed to update sources.list because of an internal error: {e!r}", "Updating sources.list")
 
 @app.command()
