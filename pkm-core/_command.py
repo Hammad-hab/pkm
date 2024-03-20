@@ -5,8 +5,14 @@ from _app import PKMManager, readPKMSourceFile, Registry, PackagesRepo
 from _http import PKMGitClone
 from _usrbase import Userbase
 import subprocess as sb
-import tkinter as tk
 
+try:
+    import tkinter as tk
+    SUPPORT_TK = True
+except:
+    SUPPORT_TK = False
+    
+    warn("--gui will not work in pkm listpkgs because your python version does not have it")
 
 app = typer.Typer(name="pkm", )
 
@@ -190,7 +196,7 @@ def listpkgs(
     Lists all the available packages
     """
     packages: list[str] = readPKMSourceFile(Registry.PATH_FILE, True)
-    if gui:
+    if gui and SUPPORT_TK:
         root = tk.Tk()
         root.title("PKM packages")
         root.resizable(0,0)

@@ -14,3 +14,4 @@
 * Added a crude GUI option in `listpkgs`
 * Added `CHANGELOG` for `v1.0.0` and onwards
 * Updated documentation
+* Tkinter bug fix (`Module not found`)

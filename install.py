@@ -5,10 +5,11 @@ import uuid
 import subprocess
 from base64 import b64decode
 
+PYTHON_V = "python3.11"
 print("Installing dependencies for python2 and lower (pip)")
-os.system("python3 -m pip install GitPython termcolor firebase-admin rich typer validators tomli")
+os.system(f"{PYTHON_V} -m pip install GitPython termcolor firebase-admin rich typer validators tomli Levenshtein")
 print("Installing dependencies for python3 (pip3)")
-os.system("python3 -m pip3 install GitPython termcolor firebase-admin rich typer validators tomli")
+os.system(F"{PYTHON_V} -m pip3 install GitPython termcolor firebase-admin rich typer validators tomli Levenshtein")
 class GenericProgress(RemoteProgress):
     def update(self, op_code: int, cur_count: str | float, max_count: str | float | None = None, message: str = "") -> None:
         if max_count is not None:
@@ -72,7 +73,7 @@ shutil.move(f"{target_path}/pkm-core", "/usr/local/bin/")
 shutil.rmtree(target_path)
 os.rename(f"/usr/local/bin/pkm-core", f"/usr/local/bin/pkmd")
 with open(f"/usr/local/bin/pkmd/__main__.py", "r") as f:
-    contents = f.read().replace("INSTALLER<INSERT_PYTHON_PATH>", "!" + subprocess.run(["which", "python3"], capture_output=True).stdout.decode("utf-8"))
+    contents = f.read().replace("INSTALLER<INSERT_PYTHON_PATH>", "!" + subprocess.run(["which", PYTHON_V], capture_output=True).stdout.decode("utf-8"))
     f.close()
     
 with open(f"/usr/local/bin/pkmd/__main__.py", "w") as f:
@@ -80,9 +81,9 @@ with open(f"/usr/local/bin/pkmd/__main__.py", "w") as f:
     f.close()
 
 SHELL_PROP_SRC = \
-"""
+f"""
 #!/bin/zsh
-python3 /usr/local/bin/pkmd/__main__.py $@
+{PYTHON_V} /usr/local/bin/pkmd/__main__.py $@
 """
 
 with open(f"/usr/local/bin/pkm", "w") as f:

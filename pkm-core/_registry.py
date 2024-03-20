@@ -47,7 +47,7 @@ class Registry:
     def writeDefault(self):
         self.write_to(Registry.PATH_FILE)
 
-def readPKMSourceFile(name:str, retlist=False) -> Registry | list[str]:
+def readPKMSourceFile(name:str, retlist=False) -> Registry :
     if not os.path.isfile(name):
         with open(name, "x+") as fread:
             return Registry()
