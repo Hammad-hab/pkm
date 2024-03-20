@@ -130,5 +130,5 @@ To upload a package you can use `pkm upload` command built into `pkm`. Following
 2) Run `pkm upload`
 3) The cli will prompt you for your login details and package information
 4) Type in your username and password if you have an account. If you do not have an account, you can create one by running `pkm create account` (See above for usage)
-5) Insert the package name and repository
+5) If you have created a package using `pkm create package` the cli will automatically fetch information regarding it and upload the package, if not then it'll prompt you for package name, repository et cetera.
 6) Press [`ENTER`] to upload the package to the repository

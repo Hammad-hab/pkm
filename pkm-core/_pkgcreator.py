@@ -14,6 +14,15 @@ dinfo={pkgconcat}
 
 [general]
 version={pkgversion}
+pack=true
+"""
+
+README = \
+"""
+# <INSERT_NAME>
+version <INSERT_VERSION>
+This is a sample README.md file that is meant to contain your package's documentation, information etc.
+
 """
 
 class PackageCreator:
@@ -47,8 +56,11 @@ class PackageCreator:
         os.mkdir("src")
         with open(".pkmrc", "w") as fwrite:
             fwrite.write(PKMRC.format(username=self.user, pkgname=self.target_package_name, pkgrepo=self.github_remote_url, pkgconcat=self.target_package_name + self.github_remote_url, pkgversion=self.target_package_version))
+        with open("README.md", "w") as fwrite:
+            fwrite.write(README)
         os.chdir("src")
         with open("__init__.🔥", "w") as f:
             f.write("fn main() raises:\n\tprint(\"Hello from pkm!\")")
+            
         pass
     ...
