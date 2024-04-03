@@ -13,6 +13,7 @@ class PKMGitClone:
         self.git_repo_url = url
         self.pkgname = pkgname
         self.pkg_bin = PKMGitClone.PACK
+        
         info("Created PKMGitClone instance")
     def clone(self):
         info("Executing Pre-clone operations")
@@ -25,13 +26,23 @@ class PKMGitClone:
             print()
             success(f"Successfully cloned repository {self.git_repo_url}")
             info("Deleting tmp/ files and setting up project")
-            shutil.move(tmp_relative + "/" + self.pkgname, PKMGitClone._MND_DIR + self.pkgname)
+            shutil.move(tmp_relative + "/" + self.pkgname, PKMGitClone._MND_DIR + 
+                        self.pkgname)
             shutil.rmtree(PKMGitClone._MND_DIR + PKMGitClone._TMP_FOLDER_NAME)
+            print("Searching for setupfiles/__pkm_setup__.🔥...")
+            if os.path.isdir(PKMGitClone._MND_DIR + 
+                        self.pkgname +"setupfiles") and os.path.isfile(PKMGitClone._MND_DIR + 
+                        self.pkgname +"setupfiles/__pkm_setup__.🔥"):
+                success("Found setup files!")
+                os.system(f"cd {PKMGitClone._MND_DIR + self.pkgname} && mojo run setupfiles/__pkm_setup__.🔥")
+                ...
+            else:
+                warn("No __pkm_setup__ found.")
             if self.pkg_bin:
                 os.system(f"mojo package {PKMGitClone._MND_DIR + self.pkgname} -o {PKMGitClone._MND_DIR + self.pkgname}.mojopkg")
                 shutil.rmtree(PKMGitClone._MND_DIR + self.pkgname)
-            success(f"Successfully deleted tmp files")
             
+            success(f"Successfully deleted tmp files")
             return repositiory
         except:
             info("Performing Cleanup due to error")

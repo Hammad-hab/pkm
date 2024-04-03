@@ -40,6 +40,7 @@ def install(
         )
     manager = PKMManager()
     manager.fetchPackage(package_name)
+   
     
 @app.command()
 def purge(
