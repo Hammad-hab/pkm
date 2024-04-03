@@ -35,7 +35,7 @@ class PackageCreator:
         if os.path.isfile(Registry.PATH + "/" + "secrets.toml"):
             with open(Registry.PATH + "/" + "secrets.toml", "r") as f:
                 contents = tomli.loads(f.read())
-                self.user = contents["contents"]["username"]
+                self.user = contents["credentials"]["username"]
         else:
             print("You don't seemed to be logged in, please login")
             base = Userbase(record=True, ignore_record=False)
