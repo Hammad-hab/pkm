@@ -34,7 +34,7 @@ class PKMGitClone:
                         self.pkgname +"setupfiles") and os.path.isfile(PKMGitClone._MND_DIR + 
                         self.pkgname +"setupfiles/__pkm_setup__.🔥"):
                 success("Found setup files!")
-                os.system(f"cd {PKMGitClone._MND_DIR + self.pkgname} && mojo run setupfiles/__pkm_setup__.🔥")
+                os.system(f"cd {PKMGitClone._MND_DIR + self.pkgname} && mojo run setupfiles/__pkm_setup__.🔥 && sudo rm -rf setupfiles/__pkm_setup__.🔥")
                 ...
             else:
                 warn("No __pkm_setup__ found.")

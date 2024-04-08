@@ -43,6 +43,7 @@ class PackageCreator:
             self.user = base.pusername
             
         print("REPO Initialization disabled, you need to connect to an existing repo")
+        
         self.github_remote_url = input("Enter Github URL: ")
         if self.github_remote_url:
             sb.run(["sudo", "git", "remote", "add", "origin", self.github_remote_url])
@@ -66,8 +67,8 @@ class PackageCreator:
         os.chdir("setupfiles")
         with open("__pkm_setup__.🔥", "w") as f:
             f.write(f"\"\"\"\nThis file will be executed when a package is installed\n\"\"\"fn main() raises:\n\tprint(\"Setting up {self.target_package_name}!\")")
-        with open("__pkm_purge__.🔥", "w") as f:
-            f.write(f"\"\"\"\nThis file will be executed when a package is installed\n\"\"\"fn main() raises:\n\tprint(\"Purging up {self.target_package_name}!\")") 
+        # with open("__pkm_purge__.🔥", "w") as f:
+            # f.write(f"\"\"\"\nThis file will be executed when a package is installed\n\"\"\"fn main() raises:\n\tprint(\"Purging up {self.target_package_name}!\")") 
           
         pass
     ...
